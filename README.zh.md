@@ -153,10 +153,13 @@ dsh plugin --profile desktop add /absolute/path/to/dsh-memory
 ## 开发
 
 ```bash
-node test/smoke.mjs
+node test/smoke.mjs     # 39 项检查，零依赖
+node test/cordis.mjs    # 真实运行时里的生命周期
 ```
 
-按加载器的方式用桩上下文挂载插件，然后在临时存储上驱动工具和提示词片段：35 项检查，覆盖去重、预算裁剪、淘汰、坏行容错和参数校验。不需要测试框架，也不需要安装依赖。
+`smoke` 在临时存储上驱动工具和提示词片段：去重、预算裁剪、淘汰、坏行容错、参数校验、卸载清理。不需要测试框架，也不需要安装。
+
+`cordis` 用真实的 `@deepseek-ai/cordis` 挂载插件，验证桩测不出来的两件事：`ctx.plugin()` 能加载它，以及卸载时两处注册都会被移除。运行时不存在时它会跳过——所以 CI 只跑第一个，这个请在 DSH 安装环境里跑。
 
 ## 许可
 

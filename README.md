@@ -169,13 +169,18 @@ Honest list of what this version does **not** do:
 ## Development
 
 ```bash
-node test/smoke.mjs
+node test/smoke.mjs     # 39 checks, no dependencies
+node test/cordis.mjs    # lifecycle in the real runtime
 ```
 
-Mounts the plugin against a stub context the way the loader would, then drives the tool and
-the prompt section against a temporary store: 35 checks covering de-duplication, budget
-trimming, eviction, malformed-line resilience, and argument validation. No test framework,
-no install step.
+`smoke` drives the tool and the prompt section against a temporary store: de-duplication,
+budget trimming, eviction, malformed-line resilience, argument validation, and unload
+cleanup. No test framework, no install step.
+
+`cordis` mounts the plugin through the real `@deepseek-ai/cordis` and proves the two things
+a stub cannot: that `ctx.plugin()` loads it, and that unloading removes both registrations.
+It skips when the runtime is not installed, which is why CI runs only the first — run it
+inside a DSH installation.
 
 ## Licence
 

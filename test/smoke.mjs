@@ -29,13 +29,29 @@ function equal(actual, expected, label) {
 /** Mount the plugin against a stub context, as the loader would. */
 function mount(dir, config = {}) {
   const registered = new Map()
+  const effects = []
   let section
   const ctx = {
-    tools: { register: (definition) => { registered.set(definition.name, definition); return () => {} } },
-    systemPrompt: { section: (value) => { section = value; return () => {} } },
+    tools: {
+      register: (definition) => {
+        registered.set(definition.name, definition)
+        return () => registered.delete(definition.name)
+      },
+    },
+    systemPrompt: {
+      section: (value) => {
+        section = value
+        return () => { section = undefined }
+      },
+    },
+    // cordis runs the callback and keeps whatever disposer it returns for unload.
+    effect: (callback) => {
+      effects.push(callback())
+      return () => {}
+    },
   }
   apply(ctx, { dir, ...config })
-  return { tool: registered.get('memory'), section }
+  return { tool: registered.get('memory'), section, registered, effects, getSection: () => section }
 }
 
 const root = mkdtempSync(join(tmpdir(), 'dsh-memory-'))
@@ -125,6 +141,14 @@ try {
   writeFileSync(file, `${readFileSync(file, 'utf8')}{ this is not json }\n`, 'utf8')
   const afterCorruption = await tool.execute({ action: 'list' })
   ok(afterCorruption.detail.includes('memories'), 'one malformed line does not disable the store', afterCorruption.detail)
+
+  console.log('disposal')
+  const disposable = mount(join(root, 'disposable'))
+  ok(disposable.registered.has('memory'), 'tool is registered before unload')
+  ok(disposable.getSection() !== undefined, 'section is registered before unload')
+  for (const effect of disposable.effects) effect?.()
+  ok(!disposable.registered.has('memory'), 'the effect disposer unregisters the tool')
+  ok(disposable.getSection() === undefined, 'the effect disposer removes the prompt section')
 
   console.log('eviction')
   const small = mount(join(root, 'small'), { maxEntries: 2 })
