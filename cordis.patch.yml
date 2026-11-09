@@ -1,0 +1,19 @@
+# dsh-memory — persistent memory for DeepSeek Harness.
+#
+# Inserts one Host plugin. It reads the running composition through `inject`:
+# `tools` (to register the `memory` tool) and `systemPrompt` (to contribute the
+# memory section that makes remembered facts visible without a tool call).
+#
+# The row id matches the package name, as the shipped bundles do. Configuration
+# is optional; the commented block below shows every field with its default.
+
+- insert:
+    - id: dsh-memory
+      name: 'dsh-memory'
+      # config:
+      #   # Where memories live. Default: <DSH home>/memory/memory.jsonl
+      #   dir: 'C:/Users/me/.dsh/memory'
+      #   # Byte budget for the injected prompt section. Default: 4096
+      #   maxBytes: 4096
+      #   # Hard cap on stored entries; the oldest is evicted first. Default: 500
+      #   maxEntries: 500
