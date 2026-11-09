@@ -2,6 +2,8 @@
 
 **Persistent, human-editable memory for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).**
 
+[![CI](https://github.com/AaronWang-cpu/dsh-memory/actions/workflows/ci.yml/badge.svg)](https://github.com/AaronWang-cpu/dsh-memory/actions/workflows/ci.yml)
+
 English | [中文](README.zh.md)
 
 The agent forgets everything when a session ends. `dsh-memory` gives it one small place to
@@ -159,7 +161,8 @@ Honest list of what this version does **not** do:
 
 ## Requirements
 
-- DeepSeek Harness `0.2.x` (built and tested against `0.2.2-rc.1`)
+- DeepSeek Harness `0.2.x` — the Host API this plugin targets is the one shipped in `0.2.2-rc.1`
+  (`ctx.tools.register`, `ctx.systemPrompt.section`)
 - Node `>= 20`
 - No dependencies. The plugin imports only Node's standard library.
 

@@ -2,6 +2,8 @@
 
 **给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的持久记忆，纯文本、可手改。**
 
+[![CI](https://github.com/AaronWang-cpu/dsh-memory/actions/workflows/ci.yml/badge.svg)](https://github.com/AaronWang-cpu/dsh-memory/actions/workflows/ci.yml)
+
 [English](README.md) | 中文
 
 会话一结束，agent 就把你忘光了。`dsh-memory` 给它一个记事本——一个你能读、能改、能删、能备份的 JSONL 文件。
